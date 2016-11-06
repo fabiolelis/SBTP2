@@ -1,0 +1,20 @@
+	loadi R1 psw ;get password
+	loadc R6 3 ;set number of tries
+	loadc R4 1 ; set it as 1
+	loadi R2 error ;get error msg
+_start: loadi R0 IO ;inserted password
+	seq R3 R0 R1 ;check if is =
+	jmpz R3 _wrong ;if it is right
+	jump _right ;if it is wrong
+_wrong: storei R2 IO ; send msg
+	addi R4 1 ; add counter
+	sgt R3 R4 R6 ; tries > 3?
+	jmpp R3 _tme ;too much errors
+	jump _start ; restart
+_right: loadc R7 0 ; set R7 out as 0
+	jump _end ;finish it
+_tme: loadc R7 42 ;wrong output
+_end: storei R7 IO ;print output
+	exit ;
+psw: .data 2 1234	; password
+error: .data 2 -1	; error 
